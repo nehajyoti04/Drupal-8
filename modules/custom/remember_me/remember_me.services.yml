@@ -1,0 +1,28 @@
+
+
+
+
+
+services:
+  remember_me.event_subscriber:
+    class: Drupal\remember_me\EventSubscriber\Remember_meSubscriber
+    arguments:
+      - '@authentication'
+      - '@current_user'
+    tags:
+      - {name: event_subscriber}
+
+#services:
+#  vppr.login_page_access:
+#    class: Drupal\vppr\EventSubscriber\vpprSubscriber
+#    tags:
+#      - {name: event_subscriber}
+
+#services:
+#  remember_me.event_subscriber:
+#    class: Drupal\remember_me\EventSubscriber\Remember_meSubscriber
+#    arguments:
+#      - '@authentication'
+#      - '@current_user'
+#    tags:
+#      - {name: event_subscriber}

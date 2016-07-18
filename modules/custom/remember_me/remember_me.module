@@ -1,0 +1,106 @@
+<?php
+
+use \Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\user\Entity\User;
+/**
+ * Implements hook_form_alter().
+ */
+function remember_me_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Only make changes to these forms.
+  if (in_array($form_id, array('user_login', 'user_login_block', 'user_login_form'))) {
+//    dpm("form");
+//    dpm($form);
+    // Configuration for the remember me checkbox.
+    $cbox['remember_me'] = array(
+      '#title' => t('Remember me'),
+      '#type' => \Drupal::state()->get('remember_me_checkbox_visible', 1) ? 'checkbox' : 'hidden',
+      '#default_value' => \Drupal::state()->get('remember_me_checkbox', 1),
+      '#attributes' => array('tabindex' => 1),
+    );
+
+    // Add a custom submit handler to save the value in user account.
+    $form['#submit'][] = '_remember_me_user_login_form_submit';
+
+    $que = array();
+    // Now lets try and insert it right after the password field in the document
+    // and set the tabindex to 1 for each field so that we can jump in sequence.
+    while (list($key, $val) = each($form)) {
+      switch ($key) {
+        case 'name':
+        case 'pass' :
+          $val['#attributes']['tabindex'] = 1;
+          break;
+        case 'actions':
+          $form = $que + $cbox + $form;
+          $form[$key]['submit']['#attributes']['tabindex'] = 1;
+          return;
+      }
+      $que[$key] = $val;
+    }
+
+
+  }
+}
+
+/**
+ * Custom submit handler for login form.
+ */
+function _remember_me_user_login_form_submit($form, FormStateInterface $form_state) {
+//  $user = \Drupal\user\Entity\User::load(\Drupal::currentUser();
+  $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+//  $user->set("remember_me", 'remember-me');
+  $x =  $user->save();
+//  dpm("user");
+//  dpm($user->getAccount());
+//  dpm("account data");
+//  dpm($user->data);
+//
+//
+//
+//  dpm("form state");
+  $remember_me = $form_state->getValues()['remember_me'];
+//  dpm($remember_me);
+
+//$user['remember_me'] = 'remember-me';
+//  user_save($user);
+//  user_save($user, array('remember_me' => !$remember_me), 'remember-me');
+//  $user->set("remember_me", 1);
+//  $user->save();
+//  exit;
+//  print '<pre>'; print_r("user"); print '</pre>';
+//  print '<pre>'; print_r($user); print '</pre>';
+//  // Set redirect to login form.
+//  $form_state->setRedirect('custom.redirect_callback');
+}
+
+
+/**
+ * Implements hook_user_presave().
+ */
+//function remember_me_user_presave(&$edit, $account, $category) {
+////  // only listen to remember me events
+////  if ($category != 'remember-me') {
+////    return;
+////  }
+//
+//  // Make sure that our form value 'remember_me' is stored as data 'remember_me'.
+//  if (!empty($edit['remember_me'])) {
+//    if (!isset($edit['data'])) {
+//      $edit['data'] = array();
+//    }
+//    $edit['data']['remember_me'] = (bool) $edit['remember_me'];
+//  }
+//  else {
+//    unset($edit['data']['remember_me']);
+//  }
+//}
+
+/**
+ * Implements hook_user_login().
+ */
+//function remember_me_user_login($account) {
+//  if ($account->uid) {
+//    user_save($account, array('remember_me' => !empty($edit['input']['remember_me'])), 'remember-me');
+//  }
+//}
