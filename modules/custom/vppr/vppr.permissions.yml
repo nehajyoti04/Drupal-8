@@ -1,0 +1,7 @@
+administer filters:
+  title: 'Hello title'
+  description: 'Hello description.'
+  restrict access: true
+
+permission_callbacks:
+  - Drupal\vppr\VpprPermissions::permissions

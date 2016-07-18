@@ -1,0 +1,47 @@
+#services:
+#  vppr.route_subscriber:
+##  class: Drupal\vppr\Access\VpprAccessCheck
+#  class: Drupal\vppr\Routing\RouteSubscriber
+#  tags:
+#    - { name: event_subscriber }
+
+#services:
+#  vppr.access_checker:
+#  class: Drupal\vppr\Access\CustomAccessCheck
+#  arguments: ['@current_user']
+#  tags:
+#    - { name: access_check }
+
+#   class: Drupal\vppr\Routing\VpprAlterRouteSubscriber
+#    class: Drupal\vppr\Routing\RouteSubscriber
+
+
+#    tags:
+#      - { name: event_subscriber }
+# tags:
+#  - { name: access_check }
+#services:
+#  node.route_subscriber:
+#    class: Drupal\YOURMODULE\Routing\RouteSubscriber
+#    tags:
+#      - { name: event_subscriber }
+
+
+#services:
+#
+#  vppr.taxonomy:
+#
+#    class: Drupal\vppr\Access\CustomAccessCheck
+#    arguments: ['@current_user']
+#    tags:
+#
+##      - {name: access_check}
+#      - {name: access_check, applies_to: _access_check_token}
+
+
+services:
+  vppr:
+    path: '/admin/structure/taxonomy'
+    class :  Drupal\vppr\Controller\VpprController
+    requirements:
+      _custom_access:  '\Drupal\vppr\Controller\VpprController::access'

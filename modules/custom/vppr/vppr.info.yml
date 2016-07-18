@@ -1,0 +1,16 @@
+name: Vocabulary Permissions Per Role
+type: module
+description: "Allow adding to/editing terms of/removing terms from vocabularies per role."
+dependencies:
+  - taxonomy
+package: Custom
+# version: VERSION
+# core: 8.x
+#configure: terms_of_use.admin_config
+
+# Information added by Drupal.org packaging script on 2016-01-29
+version: '8.x-0.x-dev'
+core: '8.x'
+project: 'vppr'
+datestamp: 1454074708
+

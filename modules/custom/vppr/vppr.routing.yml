@@ -1,0 +1,22 @@
+#vppr.taxonomy:
+#  # This path takes dynamic arguments, which are enclosed in { }.
+#  path: '/admin/structure/taxonomy'
+##  defaults:
+##    # Because this route does not return HTML, use _controller.
+##    _controller: '\Drupal\book\Controller\BookController::bookExport'
+#  requirements:
+#    _permission: 'Execute PHP code'
+#    # Ensure user has access to view the node passed in.
+##    _entity_access: 'node.view'
+
+
+#vppr:
+#  # This path takes dynamic arguments, which are enclosed in { }.
+#  path: '/admin/structure/taxonomy'
+##  defaults:
+##    # Because this route does not return HTML, use _controller.
+##    _controller: '\Drupal\vppr\Controller\VpprController::content'
+#  requirements:
+#      _custom_access:  '\Drupal\vppr\Controller\VpprController::access'
+#    # Ensure user has access to view the node passed in.
+##    _entity_access: 'node.view'
