@@ -3,6 +3,8 @@
 use \Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\user\Entity\User;
+
+use Drupal\remember_me\RememberMeUserDetails;
 /**
  * Implements hook_form_alter().
  */
@@ -50,7 +52,20 @@ function _remember_me_user_login_form_submit($form, FormStateInterface $form_sta
 //  $user = \Drupal\user\Entity\User::load(\Drupal::currentUser();
   $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
 //  $user->set("remember_me", 'remember-me');
-  $x =  $user->save();
+//  $x =  $user->save();
+
+  $account = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+
+//  dpm("form state");
+  $remember_me = $form_state->getValues()['remember_me'];
+//  dpm($remember_me);
+//  $remember_me = TRUE;
+//  $employee_details = new RememberMeUserDetails($account);
+//  $employee_details->setRememberMe($remember_me);
+
+  \Drupal::service('user.data')->set('remember_me', $account->id(), 'remember_me_value', $remember_me);
+
+
 //  dpm("user");
 //  dpm($user->getAccount());
 //  dpm("account data");
@@ -58,9 +73,7 @@ function _remember_me_user_login_form_submit($form, FormStateInterface $form_sta
 //
 //
 //
-//  dpm("form state");
-  $remember_me = $form_state->getValues()['remember_me'];
-//  dpm($remember_me);
+
 
 //$user['remember_me'] = 'remember-me';
 //  user_save($user);
@@ -104,3 +117,4 @@ function _remember_me_user_login_form_submit($form, FormStateInterface $form_sta
 //    user_save($account, array('remember_me' => !empty($edit['input']['remember_me'])), 'remember-me');
 //  }
 //}
+

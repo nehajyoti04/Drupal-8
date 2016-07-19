@@ -22,8 +22,43 @@ class Remember_meSubscriber implements EventSubscriberInterface {
 
     $user = $this->accountProxy;
     if($user->id()) {
+
+
+      dpm("hello");
+      $account = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+      $remember_me_value = \Drupal::service('user.data')->get('remember_me', $account->id(), 'remember_me_value');
+//      dpm("account");
+//      dpm($account->id());
+//      dpm("value");
+//      dpm($value);
 //      print '<pre>'; print_r("user"); print '</pre>';
 //      print '<pre>'; print_r($user); print '</pre>';
+
+
+//      dpm("remember value");
+//      dpm($remember_me_value);
+//      dpm("remember managed");
+//      dpm(\Drupal::state()->get('remember_me_managed', 0));
+//
+//      $remember_me_lifetime_value = \Drupal::state()->get('remember_me_lifetime', 604800);
+//      if ($remember_me_value && \Drupal::state()->get('remember_me_managed', 0) != 0) {
+//        // Set lifetime as configured via admin settings.
+//        dpm("inside if");
+//        if ($remember_me_lifetime_value != ini_get('session.cookie_lifetime')) {
+//          dpm("inside if if ");
+//          _remember_me_set_lifetime($remember_me_value);
+//        }
+//      }
+//      elseif (!isset($remember_me_value)) {
+//        dpm("inside else");
+//        // If we have cookie lifetime set already then unset it.
+//        if (0 != ini_get('session.cookie_lifetime')) {
+//          _remember_me_set_lifetime(0);
+//        }
+//      }
+
+
+
     }
 //    print '<pre>'; print_r("request"); print '</pre>';
 //    $user = $this->accountProxy;
@@ -32,6 +67,9 @@ class Remember_meSubscriber implements EventSubscriberInterface {
 //    print '<pre>'; print_r($event); print '</pre>';
 
   }
+
+
+
   /**
    * {@inheritdoc}
    */
@@ -46,7 +84,7 @@ class Remember_meSubscriber implements EventSubscriberInterface {
 //    $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
   }
 
-  public function _remember_me_set_lifetime() {
+  public function _remember_me_set_lifetime($cookie_lifetime) {
 
 
     print '<pre>'; print_r("inside helper function"); print '</pre>';

@@ -7,6 +7,7 @@
 
 namespace Drupal\remember_me\Form;
 
+use Drupal\Core\Datetime\Date;
 use Drupal\Core\Form\ConfigFormBase;
 //use Drupal\node\Entity\NodeType;
 use Drupal\Core\Form\FormStateInterface;
@@ -30,16 +31,45 @@ class Remember_meConfigForm extends ConfigFormBase {
 
     $time_intervals = array(30, 3600, 10800, 21600, 43200, 86400, 172800, 259200, 604800, 1209600, 2592000, 5184000, 7776000);
 
+
+
+
+   $options =  array_map(array(\Drupal::service('date.formatter'), 'formatInterval'), array_combine($time_intervals, $time_intervals));
+
+
 //    $options = array_combine($time_intervals, $time_intervals);
 
 //    dpm("options");
 //    dpm($options);
 //    $options = \DateFormatterInterface::formatInterval($options);
 
-    $options = array_map($this->format_interval(), $time_intervals);
+//    $options = array_map($this->format_interval(), $time_intervals);
 
-    dpm("options");
-    dpm($options);
+
+
+
+
+
+
+
+//$date_service = \Drupal::service('date.formatter');
+//$options = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200,
+//  64800, 86400, 172800, 259200, 604800, 1209600, 2419200), array($date_service, 'formatInterval'));
+
+
+
+
+//    dpm("options");
+//    dpm($options);
+
+
+
+
+
+
+
+
+
 
     $vars = array(
       'remember' => array(
