@@ -11,8 +11,7 @@ use Drupal\remember_me\RememberMeUserDetails;
 function remember_me_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Only make changes to these forms.
   if (in_array($form_id, array('user_login', 'user_login_block', 'user_login_form'))) {
-//    dpm("form");
-//    dpm($form);
+
     // Configuration for the remember me checkbox.
     $cbox['remember_me'] = array(
       '#title' => t('Remember me'),
