@@ -39,7 +39,7 @@ class Remember_meSubscriber implements EventSubscriberInterface {
   }
 
 
-  public function xyz(GetResponseEvent $event) {
+  public function xyz() {
 
     $user = $this->accountProxy;
 
@@ -124,17 +124,6 @@ class Remember_meSubscriber implements EventSubscriberInterface {
   public function _remember_me_set_lifetime($cookie_lifetime) {
 
 
-//    print '<pre>'; print_r("inside helper function"); print '</pre>';
-    dpm("inside helper function");
-    // We have session started.
-    // Lets close the session, change php cookie lifetime variable, and start
-    // session again.
-    // Prevent sess_write from persisting the session object at this time,
-    // it will happen on shutdown.
-//    dpm("cookie life time ");
-//    dpm($cookie_lifetime);
-
-
 
 //    session_write_close();
 
@@ -170,8 +159,6 @@ class Remember_meSubscriber implements EventSubscriberInterface {
 //    $session_manager->setSaveHandler(FALSE);
 
 //    $session_manager->start();
-//    dpm("session manager");
-//    dpm($session_manager);
 
     $session = \Drupal::service('session');
 //    $session->restart();
