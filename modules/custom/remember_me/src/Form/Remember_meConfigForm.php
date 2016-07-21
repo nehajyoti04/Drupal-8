@@ -38,7 +38,7 @@ class Remember_meConfigForm extends ConfigFormBase {
     $form['remember_me_managed'] = array(
       '#type' => 'checkbox',
       '#title' => t('Manage session lifetime'),
-      '#default_value' => $config->get('remember_me_managed'),
+      '#default_value' => $config->get('remember_me_managed', 1),
       '#description' => t('Choose to manually overwrite the configuration value from settings.php.'),
     );
     $form['remember_me_lifetime'] = array(
