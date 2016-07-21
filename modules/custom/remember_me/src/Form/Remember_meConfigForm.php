@@ -25,7 +25,7 @@ class Remember_meConfigForm extends ConfigFormBase {
   }
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-
+    $config = $this->config('remember_me.settings');
 
     global $user;
 
@@ -94,26 +94,26 @@ class Remember_meConfigForm extends ConfigFormBase {
     $form['remember_me_managed'] = array(
       '#type' => 'checkbox',
       '#title' => t('Manage session lifetime'),
-      '#default_value' => \Drupal::state()->get('remember_me_managed', 0),
+      '#default_value' => $config->get('remember_me_managed'),
       '#description' => t('Choose to manually overwrite the configuration value from settings.php.'),
     );
     $form['remember_me_lifetime'] = array(
       '#type' => 'select',
       '#title' => t('Lifetime'),
-      '#default_value' => \Drupal::state()->get('remember_me_lifetime', 604800),
+      '#default_value' => $config->get('remember_me_lifetime', 604800),
       '#options' => $options,
       '#description' => t('Duration a user will be remembered for. This setting is ignored if Manage session lifetime (above) is disabled.'),
     );
     $form['remember_me_checkbox'] = array(
       '#type' => 'checkbox',
       '#title' => t('Remember me field'),
-      '#default_value' => \Drupal::state()->get('remember_me_checkbox', 1),
+      '#default_value' => $config->get('remember_me_checkbox', 1),
       '#description' => t('Default state of the "Remember me" field on the login forms.'),
     );
     $form['remember_me_checkbox_visible'] = array(
       '#type' => 'checkbox',
       '#title' => t('Remember me field visible'),
-      '#default_value' => \Drupal::state()->get('remember_me_checkbox_visible', 1),
+      '#default_value' => $config->get('remember_me_checkbox_visible', 1),
       '#description' => t('Should the "Remember me" field be visible on the login forms.'),
     );
 
@@ -133,7 +133,8 @@ class Remember_meConfigForm extends ConfigFormBase {
     \Drupal::state()->set('remember_me_lifetime', $form_state->getValues()['remember_me_lifetime']);
     \Drupal::state()->set('remember_me_checkbox', $form_state->getValues()['remember_me_checkbox']);
     \Drupal::state()->set('remember_me_checkbox_visible', $form_state->getValues()['remember_me_checkbox_visible']);
-    $config = $this->config('remember_me.settings');
+//    $config = $this->config('remember_me.settings');
+    $config = \Drupal::service('config.factory')->getEditable('remember_me.settings');
     $config->set('remember_me_managed', $form_state->getValues()['remember_me_managed']);
     $config->set('remember_me_lifetime', $form_state->getValues()['remember_me_lifetime']);
     $config->set('remember_me_checkbox', $form_state->getValues()['remember_me_checkbox']);
