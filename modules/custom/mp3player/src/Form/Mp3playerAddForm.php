@@ -1,36 +1,50 @@
 <?php
 /**
-* @file
-* Contains \Drupal\example\Form\ExampleForm.
-*/
+ * @file
+ * Contains \Drupal\example\Form\ExampleForm.
+ */
 
 namespace Drupal\mp3player\Form;
 
+use Drupal\Core\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 use Drupal\mp3player\Controller\Mp3playerController;
 
-/**
-* Implements an example form.
-*/
-class Mp3playerForm extends FormBase {
+use Drupal\Core\Database\Query\Merge;
+use Drupal\Core\Database\Connection;
+
+use Drupal\Core\DrupalKernel;
+use Symfony\Component\HttpFoundation\Request;
+use Drupal\Component\Render\HtmlEscapedText;
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Render\MarkupInterface;
+use Drupal\Component\Render\MarkupTrait;
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Tests\UnitTestCase;
 
 /**
-* {@inheritdoc}
-*/
-public function getFormId() {
-return 'mp3player_player_form';
-}
+ * Implements an example form.
+ */
+class Mp3playerAddForm extends FormBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'mp3player_player_form';
+  }
 
   public function buildForm(array $form, FormStateInterface $form_state, $pid = NULL) {
     $player = Mp3playerController::mp3player_players($pid);
 
     if(!$pid) {
-//      $player = $player[1];
-      $player['pid'] = '';
-      $player['name'] = '';
+      $player = $player[1];
+//      $player['pid'] = '';
+//      $player['name'] = '';
     }
+
 
     $form['namegroup'] = array(
       '#type' => 'fieldset',
@@ -43,7 +57,10 @@ return 'mp3player_player_form';
     $form['namegroup']['name'] = array(
       '#type' => 'textfield',
       '#title' => t('Name'),
+//      SafeMarkup::checkPlain
+      '#default_value' => $player['name'],
 //      '#default_value' => check_plain($player['name']),
+//          '#default_value' => SafeMarkup::checkPlain($player['name']),
       '#required' => TRUE,
       '#size' => '20',
       '#description' => t('Unique name of player. Please use alphanumeric characters, and underscores (_).'),
@@ -59,21 +76,21 @@ return 'mp3player_player_form';
       );
     }
 
-//    $form['options'] = array(
-//      '#type' => 'fieldset',
-//      '#title' => t('Player Options'),
-//      '#weight' => -1,
-//      '#collapsible' => FALSE,
-//      '#collapsed' => FALSE,
-//    );
+    $form['options'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Player Options'),
+      '#weight' => -1,
+      '#collapsible' => FALSE,
+      '#collapsed' => FALSE,
+    );
 //
-//    $form['options']['autostart'] = array(
-//      '#type' => 'select',
-//      '#title' => t('Auto-start'),
-//      '#default_value' => $player['autostart'],
-//      '#options' => array('no' => t('No'), 'yes' => t('Yes')),
-//      '#description' => t('If yes, player starts automatically.'),
-//    );
+    $form['options']['autostart'] = array(
+      '#type' => 'select',
+      '#title' => t('Auto-start'),
+      '#default_value' => $player['autostart'],
+      '#options' => array('no' => t('No'), 'yes' => t('Yes')),
+      '#description' => t('If yes, player starts automatically.'),
+    );
 //    $form['options']['loopaudio'] = array(
 //      '#type' => 'select',
 //      '#title' => t('Loop Audio'),
@@ -105,7 +122,8 @@ return 'mp3player_player_form';
 //    $form['options']['initialvolume'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Initial Volume'),
-//      '#default_value' => check_plain($player['initialvolume']),
+//      '#default_value' => $player['initialvolume'],
+////      '#default_value' => SafeMarkup::checkPlain($player['initialvolume']),
 //      '#required' => TRUE,
 //      '#size' => '10',
 //      '#description' => t('Initial volume level (from 0 to 100).'),
@@ -113,7 +131,8 @@ return 'mp3player_player_form';
 //    $form['options']['buffer'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Buffer Time'),
-//      '#default_value' => check_plain($player['buffer']),
+//      '#default_value' => $player['buffer'],
+////      '#default_value' => check_plain($player['buffer']),
 //      '#required' => TRUE,
 //      '#size' => '10',
 //      '#description' => t('Buffering time in seconds.'),
@@ -142,7 +161,8 @@ return 'mp3player_player_form';
 //    $form['options']['width'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Player Width'),
-//      '#default_value' => check_plain($player['width']),
+//      '#default_value' => $player['width'],
+////      '#default_value' => check_plain($player['width']),
 //      '#required' => TRUE,
 //      '#size' => '10',
 //      '#description' => t('Width of the player. e.g. 290 (290 pixels) or 100%.'),
@@ -171,7 +191,8 @@ return 'mp3player_player_form';
 //    $form['colours']['transbg']['pagebg'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Player Background Colour'),
-//      '#default_value' => check_plain($player['pagebg']),
+//      '#default_value' => $player['pagebg'],
+////      '#default_value' => check_plain($player['pagebg']),
 //      '#required' => FALSE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
@@ -181,7 +202,8 @@ return 'mp3player_player_form';
 //    $form['colours']['bg'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Background'),
-//      '#default_value' => check_plain($player['bg']),
+//      '#default_value' => $player['bg'],
+////      '#default_value' => check_plain($player['bg']),
 //      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
@@ -189,7 +211,8 @@ return 'mp3player_player_form';
 //    $form['colours']['leftbg'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Left Background'),
-//      '#default_value' => check_plain($player['leftbg']),
+//      '#default_value' => $player['leftbg'],
+////      '#default_value' => check_plain($player['leftbg']),
 //      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
@@ -198,7 +221,8 @@ return 'mp3player_player_form';
 //    $form['colours']['lefticon'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Speaker Icon'),
-//      '#default_value' => check_plain($player['lefticon']),
+//      '#default_value' => $player['lefticon'],
+////      '#default_value' => check_plain($player['lefticon']),
 //      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
@@ -206,7 +230,7 @@ return 'mp3player_player_form';
 //    $form['colours']['voltrack'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Volume Track Background'),
-//      '#default_value' => check_plain($player['voltrack']),
+//      '#default_value' => $player['voltrack'],
 //      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
@@ -214,7 +238,7 @@ return 'mp3player_player_form';
 //    $form['colours']['volslider'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Volume Track Slider'),
-//      '#default_value' => check_plain($player['volslider']),
+//      '#default_value' => $player['volslider'],
 //      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
@@ -222,7 +246,7 @@ return 'mp3player_player_form';
 //    $form['colours']['rightbg'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Right Background'),
-//      '#default_value' => check_plain($player['rightbg']),
+//      '#default_value' => $player['rightbg'],
 //      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
@@ -231,7 +255,8 @@ return 'mp3player_player_form';
 //    $form['colours']['rightbghover'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Right Background Hover'),
-//      '#default_value' => check_plain($player['rightbghover']),
+//      '#default_value' => $player['rightbghover'],
+////      '#default_value' => check_plain($player['rightbghover']),
 //      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
@@ -240,7 +265,7 @@ return 'mp3player_player_form';
 //    $form['colours']['righticon'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Play/Pause Icon'),
-//      '#default_value' => check_plain($player['righticon']),
+//      '#default_value' => $player['righticon'],
 //      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
@@ -248,24 +273,24 @@ return 'mp3player_player_form';
 //    $form['colours']['righticonhover'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Play/Pause Icon (hover state)'),
-//      '#default_value' => check_plain($player['righticonhover']),
-//      '#required' => TRUE,
+////      '#default_value' => check_plain($player['righticonhover']),
+////      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
 //    );
 //    $form['colours']['loader'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Loading Bar'),
-//      '#default_value' => check_plain($player['loader']),
-//      '#required' => TRUE,
+////      '#default_value' => check_plain($player['loader']),
+////      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
 //    );
 //    $form['colours']['track'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Track Backgrounds'),
-//      '#default_value' => check_plain($player['track']),
-//      '#required' => TRUE,
+////      '#default_value' => check_plain($player['track']),
+////      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
 //      '#description' => t('Loading/Progress bar track background.'),
@@ -273,32 +298,32 @@ return 'mp3player_player_form';
 //    $form['colours']['tracker'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Progress Track'),
-//      '#default_value' => check_plain($player['tracker']),
-//      '#required' => TRUE,
+////      '#default_value' => check_plain($player['tracker']),
+////      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
 //    );
 //    $form['colours']['border'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Progress Track Border'),
-//      '#default_value' => check_plain($player['border']),
-//      '#required' => TRUE,
+////      '#default_value' => check_plain($player['border']),
+////      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
 //    );
 //    $form['colours']['skip'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Previous/Next Buttons'),
-//      '#default_value' => check_plain($player['skip']),
-//      '#required' => TRUE,
+////      '#default_value' => check_plain($player['skip']),
+////      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
 //    );
 //    $form['colours']['text'] = array(
 //      '#type' => 'textfield',
 //      '#title' => t('Text'),
-//      '#default_value' => check_plain($player['text']),
-//      '#required' => TRUE,
+////      '#default_value' => check_plain($player['text']),
+////      '#required' => TRUE,
 //      '#size' => '10',
 //      '#field_prefix' => '#',
 //    );
@@ -320,6 +345,14 @@ return 'mp3player_player_form';
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+//    dpm("form state");
+//    dpm($form_state->getValues());
+
+   \Drupal::database()->merge('mp3player_players')
+     ->key(array('name' => 'hello'))
+     ->fields(array('autostart' => 'yes'))
+     ->execute();
+
   }
 
 }
